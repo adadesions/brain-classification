@@ -15,4 +15,3 @@ limit = lambda x, h: x if x < h else 0
 
 plt.imshow(image, cmap=plt.cm.bone)
 plt.show()
-transform()
