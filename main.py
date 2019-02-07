@@ -4,7 +4,7 @@ import pydicom
 import numpy as np
 
 from adabrain import *
-from hilbert import transform
+from hilbert import generator 
 
 ds = pydicom.dcmread(dcm_list[0])
 print("Patient name:", ds.PatientName)

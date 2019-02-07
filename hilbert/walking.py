@@ -20,11 +20,13 @@ tape_reader = {
     'r': lambda step: right(step),
     'o': lambda step: tuple(step),
 }
+
 inv_dict = {
     'u': 'd', 'd': 'u', 'l': 'r', 'r': 'l', 'o': 'o'
 }
 inv_tape = lambda tape: ''.join(list(map(lambda ch: inv_dict[ch], tape)))
 rev_tape = lambda tape: tape[::-1]
+get_conn_tape = lambda tape: map(lambda i: i[1] if i[0]%4 == 0 else 'o', enumerate(tape))
 
 
 hc_maps = []
@@ -62,6 +64,26 @@ tape_inv = inv_tape(tape)
 tape_rev = rev_tape(tape)
 tape = tape
 
+tape_len = len(tape)
+print('len:', tape_len)
+conn_tape = ''
+
+for i in range(tape_len//4):
+    start = 4*i
+    end = 4*(i+1)
+    seq = tape[start:end]
+    conn = seq[0]
+    shape = seq[1:]
+
+    conn_tape += conn
+    print('Seq: {}, Conn: {}, Shape: {}'.format(seq, conn, shape))
+
+order1_tape = list(get_conn_tape(conn_tape))
+print('order3', tape)
+print('order2:', conn_tape)
+print('order1:', order1_tape)
+tape = tape
+
 for ax in axes:
     p_step = [0, 0]
     path = []
@@ -88,6 +110,4 @@ for ax in axes:
 
     print('Path{}: {}'.format(len(path), path))
 
-print(tape)
-print('len:', len(tape))
 plt.show()
