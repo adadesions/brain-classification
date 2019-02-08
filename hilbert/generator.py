@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-order1 = 'dru'
 inverse_table = {
     'd': 'u', 'u': 'd',
     'l': 'r', 'r': 'l',
@@ -14,15 +13,62 @@ pairing_table = {
 }
 
 connector = lambda header: ''.join(map(lambda ch: pairing_table[ch], header))
-# assert connector('dru') == 'rdl'
-conn = connector(order1)
-print(conn)
+assert connector('dru') == 'rdl'
+assert connector('lur') == 'uld'
 
-# from itertools import *
-# from time import sleep
-# from functools import reduce
-# for x in chain('ada', 'sions'):
-#     print(x, end='')
-# print()
-# prod = [*product('durl', repeat=4)]
-# print(reduce(lambda x, y: ''.join([x, y]), ['as', 'ada']))
+inversor = lambda header: ''.join(map(lambda ch: inverse_table[ch], header))
+assert inversor('dru') == 'uld'
+assert inversor('urd') == 'dlu'
+
+build_body = lambda conn: conn.join(map(str, conn))
+assert build_body('rdl') == 'rrdldrdll'
+assert build_body('dru') == 'ddrurdruu'
+
+def split_seq(tape):
+    splited = []
+    len_tape = len(tape)//4
+    for i in range(len_tape):
+        start = i*4
+        end = start+4
+        temp = tape[start:end]
+        splited.append(temp)
+
+    return splited
+
+
+def hc_builder(genesis):
+    the_first = pairing_table[genesis[0]]
+    header = genesis[1:]
+    conn_str = connector(header)
+    inv_str = inversor(header)
+    body_str = build_body(conn_str)
+    genesis = ''.join([the_first, header])
+    tape = ''.join([genesis, body_str, inv_str])
+
+    yield tape
+
+
+def hc_generator(genesis, order):
+    tape = ''
+
+    for lv in range(1, order):
+        tape = ''
+        label_order = 'Order {}\n'.format(lv+1)
+        for header in genesis:
+            sub_tape = hc_builder(header)
+            tape += ''.join([*sub_tape])
+            genesis = split_seq(tape)
+
+        print(label_order)
+        print(tape)
+        with open('hc_lookup.txt', 'a') as file:
+            file.writelines(label_order)
+            file.writelines(tape)
+            file.writelines('\n')
+
+    return tape
+
+
+if __name__ == '__main__':
+    tape = hc_generator(['odru'], 10)
+    print(tape)

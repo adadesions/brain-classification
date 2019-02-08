@@ -3,6 +3,7 @@ import numpy as np
 from time import sleep
 from random import random
 from matplotlib.animation import FuncAnimation
+from generator import hc_generator
 
 # Walking
 left = lambda point: (point[0]-1, point[1])
@@ -30,7 +31,7 @@ get_conn_tape = lambda tape: map(lambda i: i[1] if i[0]%4 == 0 else 'o', enumera
 
 
 hc_maps = []
-for order in range(1, 5):
+for order in range(5, 9):
     n = 2**order
     temp_map = randomize(create_grid(n, n))
     hc_maps.append(temp_map)
@@ -82,7 +83,9 @@ order1_tape = list(get_conn_tape(conn_tape))
 print('order3', tape)
 print('order2:', conn_tape)
 print('order1:', order1_tape)
-tape = tape
+
+tape = hc_generator(['odru'], 3)
+print(tape)
 
 for ax in axes:
     p_step = [0, 0]
@@ -100,7 +103,7 @@ for ax in axes:
             '',
             xytext=(p_step[0], p_step[1]),
             xy=(t_step[0], t_step[1]),
-            arrowprops=dict(arrowstyle="->", color='red', linewidth=3),
+            arrowprops=dict(arrowstyle="->", color='red', linewidth=1),
         )
 
         n_step = t_step[::]
@@ -109,5 +112,6 @@ for ax in axes:
         path.append(n_step)
 
     print('Path{}: {}'.format(len(path), path))
+
 
 plt.show()
