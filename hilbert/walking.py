@@ -4,6 +4,7 @@ from time import sleep
 from random import random
 from matplotlib.animation import FuncAnimation
 from generator import hc_generator
+from encoder import get_hc_tape
 
 # Walking
 left = lambda point: (point[0]-1, point[1])
@@ -31,7 +32,7 @@ get_conn_tape = lambda tape: map(lambda i: i[1] if i[0]%4 == 0 else 'o', enumera
 
 
 hc_maps = []
-for order in range(5, 9):
+for order in range(6, 10):
     n = 2**order
     temp_map = randomize(create_grid(n, n))
     hc_maps.append(temp_map)
@@ -84,7 +85,7 @@ print('order3', tape)
 print('order2:', conn_tape)
 print('order1:', order1_tape)
 
-tape = hc_generator(['odru'], 3)
+tape = get_hc_tape('./hilbert/hc_lookup.txt', order=10)
 print(tape)
 
 for ax in axes:
