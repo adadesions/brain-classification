@@ -1,8 +1,8 @@
-from encoder import *
 from PIL import Image
-
 import matplotlib.pyplot as plt
 import numpy as np
+
+from encoder import *
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ def get_hc_tape(file_path, order=2):
         for line in file.readlines():
             if is_found:
                 encoded = line
-                break;
+                break
 
             if order_str in line:
                 is_found = True
@@ -34,7 +34,7 @@ def prepare_image(filepath):
     n = 2**hc_order
     im = im.resize((n, n))
     pyramid = tuple(pyramid_gaussian(im))
-    
+
     return pyramid[-2::-1]
 
 
@@ -54,5 +54,5 @@ tape_reader = {
 
 if __name__ == '__main__':
     FILEPATH = './hilbert/hc_lookup.txt'
-    hc_tape = get_hc_tape(FILEPATH, 10)
+    hc_tape = get_hc_tape(FILEPATH, 1)
     print(hc_tape)
