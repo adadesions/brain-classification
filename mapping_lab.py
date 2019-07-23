@@ -95,9 +95,12 @@ if __name__ == '__main__':
     # HC INIT
     hcq = HCQ(hc_order=2)
     HC_info(hcq)
+
+    # HC Multi-resolution
     mulres_imgs = hc.prepare_image(IMGPATH)
     mulres_imshow(mulres_imgs)
 
+    # HC Index calculation
     grid = create_grid(hcq['dim'])
     hc_idx = tape_to_index(hcq['tape'])
     sample_idx = get_hc_index(hc_idx, (1, 2), 1)
