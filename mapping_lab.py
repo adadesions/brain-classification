@@ -85,6 +85,25 @@ def mulres_imshow(mulres_imgs):
 
 
 if __name__ == '__main__':
+    # Selected Points
+    selected_points = {
+        "1": {
+            "N": [(2, 2)],
+            "L": [(1, 0)],
+            "B": [(0, 0)],
+        },
+        "2": {
+            "N": [(1, 3), (2, 3), (3, 1), (3, 2)],
+            "L": [(1, 1)],
+            "B": [(2, 1), (2, 2)],
+        },
+        "3": {
+            "N": [(2, 4), (3, 4), (5, 3), (5, 4)],
+            "L": [(2, 2)],
+            "B": [(3, 2), (2, 3), (3, 3)],
+        },
+    }
+
     # Path Setting
     ROOT = os.getcwd()
     DATAPATH = './datasets/mul_channel/TCGA_CS_4941_19960909'
