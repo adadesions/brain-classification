@@ -103,6 +103,8 @@ if __name__ == '__main__':
     # HC Index calculation
     grid = create_grid(hcq['dim'])
     hc_idx = tape_to_index(hcq['tape'])
+
+    # HC Sample processing
     sample_idx = get_hc_index(hc_idx, (1, 2), 1)
     sample_values = get_hc_value(grid, sample_idx)
 
