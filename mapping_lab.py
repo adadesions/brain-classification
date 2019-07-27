@@ -84,6 +84,32 @@ def mulres_imshow(mulres_imgs):
     plt.show()
 
 
+def HC_mapping(hcq, img, type, selected_points, limit):
+    sample_idx_store, sample_value_store = [], []
+    # HC Index calculation
+    # grid = create_grid(hcq['dim'])
+    hc_idx = tape_to_index(hcq['tape'])
+    hc_order = str(hcq["order"])
+    sample_x = len(selected_points[hc_order][type])
+    sample_y = 2*limit+1
+
+    for pts in selected_points[hc_order][type]:
+        sample_idx = get_hc_index(hc_idx, pts, limit)
+        sample_values = get_hc_value(img, sample_idx)
+        sample_idx_store.append(sample_idx)
+        sample_value_store.extend(sample_values)
+
+        # For Debuging
+        # print("2L+1 =", 2*L+1)
+        # print("Sample_idx:", sample_idx)
+        # print("Sample_values:", sample_values)
+
+    sample_img = np.transpose(
+        np.asarray(sample_value_store).reshape(sample_x, sample_y)
+    )
+    return sample_idx_store, sample_value_store, sample_img
+
+
 if __name__ == '__main__':
     # Selected Points
     selected_points = {
@@ -102,6 +128,31 @@ if __name__ == '__main__':
             "L": [(2, 2)],
             "B": [(3, 2), (2, 3), (3, 3)],
         },
+        "4": {
+            "N": [(10, 10), (10, 9), (7, 5), (9, 5)],
+            "L": [(5, 5), (4, 5)],
+            "B": [(4, 4), (6, 3), (7, 3), (4, 6), (5, 6)],
+        },
+        "5": {
+            "N": [(12, 19), (17, 21), (22, 17), (16, 22), (6, 20)],
+            "L": [(9, 9), (10, 9), (10, 11), (12, 7)],
+            "B": [(9, 13), (10, 12), (8, 9), (13, 8)],
+        },
+        "6": {
+            "N": [(22, 41), (42, 45), (43, 23), (38, 13)],
+            "L": [(19, 21), (19, 22), (20, 21), (20, 22)],
+            "B": [(18, 17), (19, 16), (17, 24), (24, 19)],
+        },
+        "7": {
+            "N": [(39, 86), (87, 82), (77, 65), (78, 32)],
+            "L": [(38, 43), (40, 46), (41, 49), (48, 43)],
+            "B": [(37, 34), (45, 48), (49, 38), (33, 46)],
+        },
+        "8": {
+            "N": [(93, 182), (183, 179), (181, 109), (147, 60)],
+            "L": [(79, 85), (81, 95), (103, 62), (96, 87)],
+            "B": [(67, 74), (91, 93), (101, 77), (66, 75)],
+        },
     }
 
     # Path Setting
@@ -112,21 +163,26 @@ if __name__ == '__main__':
     img = cv2.imread(IMGPATH, 1)
 
     # HC INIT
-    hcq = HCQ(hc_order=2)
+    order = 8
+    hcq = HCQ(hc_order=8)
     HC_info(hcq)
 
     # HC Multi-resolution
-    mulres_imgs = hc.prepare_image(IMGPATH)
-    mulres_imshow(mulres_imgs)
+    mulres_store = hc.prepare_image(IMGPATH)
+    # mulres_imshow(mulres_store)
 
-    # HC Index calculation
-    grid = create_grid(hcq['dim'])
-    hc_idx = tape_to_index(hcq['tape'])
+    (sample_idx_store, sample_value_store, sample_img) = HC_mapping(
+        hcq,
+        mulres_store[order-1],
+        'L',
+        selected_points,
+        9
+    )
 
-    # HC Sample processing
-    sample_idx = get_hc_index(hc_idx, (1, 2), 1)
-    sample_values = get_hc_value(grid, sample_idx)
+    # sample_img = np.asarray(sample_value_store).reshape(4, 19)
 
-    print("HC_ARRAY:", hc_idx)
-    print("Sample_idx:", sample_idx)
-    print("Sample_values:", sample_values)
+    print("Sample Idx Store", sample_idx_store)
+    print("Sample Value Store", sample_value_store)
+
+    plt.imshow(sample_img, cmap='gray')
+    plt.show()
