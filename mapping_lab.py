@@ -86,8 +86,8 @@ def mulres_imshow(mulres_imgs):
 
 def HC_mapping(hcq, img, type, selected_points, limit):
     sample_idx_store, sample_value_store = [], []
+
     # HC Index calculation
-    # grid = create_grid(hcq['dim'])
     hc_idx = tape_to_index(hcq['tape'])
     hc_order = str(hcq["order"])
     sample_x = len(selected_points[hc_order][type])
@@ -97,17 +97,30 @@ def HC_mapping(hcq, img, type, selected_points, limit):
         sample_idx = get_hc_index(hc_idx, pts, limit)
         sample_values = get_hc_value(img, sample_idx)
         sample_idx_store.append(sample_idx)
-        sample_value_store.extend(sample_values)
+        sample_value_store.append(sample_values)
 
         # For Debuging
         # print("2L+1 =", 2*L+1)
         # print("Sample_idx:", sample_idx)
         # print("Sample_values:", sample_values)
 
-    sample_img = np.transpose(
-        np.asarray(sample_value_store).reshape(sample_x, sample_y)
-    )
-    return sample_idx_store, sample_value_store, sample_img
+    # In case, To plot sample image
+    # sample_img = np.transpose(
+    #     np.asarray(sample_value_store).reshape(sample_x, sample_y)
+    # )
+    return sample_idx_store, sample_value_store
+
+
+def gabor_1d(x, scale, freq):
+    # Gaussian
+    def g(x, s):
+        return np.exp(-0.5*np.power((x/s), 2))/(s*np.sqrt(2*p))
+
+    # Real part
+    def R(x, s, f):
+        return g(x, s)*np.cos()
+
+    return g(x, scale)*np.exp()
 
 
 if __name__ == '__main__':
@@ -171,18 +184,20 @@ if __name__ == '__main__':
     mulres_store = hc.prepare_image(IMGPATH)
     # mulres_imshow(mulres_store)
 
-    (sample_idx_store, sample_value_store, sample_img) = HC_mapping(
+    (sample_idx_store, sample_value_store) = HC_mapping(
         hcq,
         mulres_store[order-1],
-        'L',
+        'B',
         selected_points,
         9
     )
 
-    # sample_img = np.asarray(sample_value_store).reshape(4, 19)
-
     print("Sample Idx Store", sample_idx_store)
     print("Sample Value Store", sample_value_store)
 
-    plt.imshow(sample_img, cmap='gray')
+    fig = plt.figure(figsize=(9, 18))
+    for i, graph in enumerate(sample_value_store):
+        ax = fig.add_subplot(3, 3, i+1)
+        ax.set_title("i = " + str(i))
+        ax.plot(graph)
     plt.show()
